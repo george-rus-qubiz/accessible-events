@@ -38,6 +38,11 @@ export interface EventItem {
   location: string;
   /** Absolute or app-relative image URL, or a base64 data URL for added events. */
   image: string;
+  /**
+   * Text alternative for `image`, describing what the picture shows. Empty or
+   * missing means the image is decorative and screen readers skip it.
+   */
+  imageAlt?: string;
   /** ISO date-time strings. */
   startDateTime: string;
   endDateTime: string;

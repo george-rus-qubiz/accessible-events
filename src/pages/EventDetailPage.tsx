@@ -62,7 +62,11 @@ export function EventDetailPage() {
       </span>
 
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-        <img src={event.image} className="h-64 w-full object-cover" />
+        <img
+          src={event.image}
+          alt={event.imageAlt ?? ""}
+          className="h-64 w-full object-cover"
+        />
         <div className="flex flex-col gap-4 p-6">
           <div className="text-2xl font-semibold text-slate-800">
             {event.name}

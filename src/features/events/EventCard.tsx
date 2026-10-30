@@ -15,7 +15,7 @@ export function EventCard({ event, href, onDismiss, badge }: EventCardProps) {
     <article
       className={`relative flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white ${
         href
-          ? "hover:border-brand-300 hover:shadow-md focus-within:ring-2 focus-within:ring-brand-600"
+          ? "hover:border-brand-300 hover:shadow-md has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-brand-600"
           : ""
       }`}
     >
@@ -30,7 +30,11 @@ export function EventCard({ event, href, onDismiss, badge }: EventCardProps) {
         </button>
       )}
       <div className="relative">
-        <img src={event.image} className="h-36 w-full object-cover" />
+        <img
+          src={event.image}
+          alt={event.imageAlt ?? ""}
+          className="h-36 w-full object-cover"
+        />
         {badge && (
           <span className="absolute left-2 top-2 rounded bg-brand-500 px-2 py-0.5 text-xs font-medium text-white">
             {badge}

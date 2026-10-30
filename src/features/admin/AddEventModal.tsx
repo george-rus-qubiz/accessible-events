@@ -19,6 +19,7 @@ const EMPTY_FORM: NewEventInput = {
   description: "",
   location: "",
   image: "",
+  imageAlt: "",
   startDateTime: "",
   endDateTime: "",
   price: 0,
@@ -86,11 +87,20 @@ export function AddEventModal({ open, onClose, onCreate }: AddEventModalProps) {
           {form.image && (
             <img
               src={form.image}
+              alt={form.imageAlt ?? ""}
               className="mt-2 h-24 w-40 rounded object-cover"
             />
           )}
           <FieldError id={imageErrorId} message={errors.image} />
         </div>
+
+        <TextField
+          label="Image description"
+          value={form.imageAlt ?? ""}
+          onChange={(e) => update("imageAlt", e.target.value)}
+          placeholder="e.g. Speakers on stage in front of a full audience"
+          error={errors.imageAlt}
+        />
 
         <div className="grid grid-cols-2 gap-4">
           <TextField

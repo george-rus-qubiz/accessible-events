@@ -60,6 +60,8 @@ export function validateNewEvent(
   }
   if (!input.image) {
     errors.image = "An image is required.";
+  } else if (!input.imageAlt?.trim()) {
+    errors.imageAlt = "Describe what the image shows.";
   }
   if (!input.startDateTime) {
     errors.startDateTime = "Start date and time are required.";

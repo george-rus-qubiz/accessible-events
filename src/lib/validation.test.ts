@@ -51,4 +51,22 @@ describe("validation", () => {
     });
     expect(errors.endDateTime).toBeDefined();
   });
+
+  it("requires an image description once an image is chosen", () => {
+    const input = {
+      name: "Test",
+      description: "",
+      location: "",
+      image: "data:image/png;base64,xxx",
+      startDateTime: "2026-01-02T09:00",
+      endDateTime: "2026-01-02T10:00",
+      price: 10,
+      maxPeople: 5,
+    };
+    expect(validateNewEvent(input).imageAlt).toBeDefined();
+    expect(validateNewEvent({ ...input, imageAlt: "   " }).imageAlt).toBeDefined();
+    expect(
+      validateNewEvent({ ...input, imageAlt: "Speakers on stage" }).imageAlt,
+    ).toBeUndefined();
+  });
 });
