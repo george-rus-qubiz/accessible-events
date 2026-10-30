@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useEvents } from "@/hooks/useEvents";
 import { useRegistrations } from "@/hooks/useRegistrations";
 import { EventCard } from "@/features/events/EventCard";
@@ -8,7 +7,6 @@ import { EventFilters } from "@/features/events/EventFilters";
 export function EventsPage() {
   const events = useEvents();
   const { registeredIds } = useRegistrations();
-  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
 
@@ -52,7 +50,7 @@ export function EventsPage() {
             <EventCard
               key={event.id}
               event={event}
-              onOpen={(id) => navigate(`/events/${id}`)}
+              href={`/events/${event.id}`}
               badge={registeredIds.includes(event.id) ? "Going" : undefined}
             />
           ))}

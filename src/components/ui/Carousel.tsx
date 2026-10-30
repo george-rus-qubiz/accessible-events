@@ -24,16 +24,17 @@ export function Carousel<T>({
 
   return (
     <div className="flex items-center gap-3">
-      <div
-        onClick={canGoPrev ? prev : undefined}
+      <button
+        type="button"
+        onClick={prev}
+        disabled={!canGoPrev}
+        aria-label="Previous events"
         className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 text-lg ${
-          canGoPrev
-            ? "cursor-pointer text-slate-600 hover:bg-slate-100"
-            : "text-slate-300"
+          canGoPrev ? "text-slate-600 hover:bg-slate-100" : "text-slate-300"
         }`}
       >
-        ‹
-      </div>
+        <span aria-hidden="true">‹</span>
+      </button>
 
       <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {visibleItems.map((item) => (
@@ -41,16 +42,17 @@ export function Carousel<T>({
         ))}
       </div>
 
-      <div
-        onClick={canGoNext ? next : undefined}
+      <button
+        type="button"
+        onClick={next}
+        disabled={!canGoNext}
+        aria-label="Next events"
         className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 text-lg ${
-          canGoNext
-            ? "cursor-pointer text-slate-600 hover:bg-slate-100"
-            : "text-slate-300"
+          canGoNext ? "text-slate-600 hover:bg-slate-100" : "text-slate-300"
         }`}
       >
-        ›
-      </div>
+        <span aria-hidden="true">›</span>
+      </button>
     </div>
   );
 }

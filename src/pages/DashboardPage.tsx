@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useEvents } from "@/hooks/useEvents";
 import { useRegistrations } from "@/hooks/useRegistrations";
@@ -10,7 +9,6 @@ export function DashboardPage() {
   const { currentUser } = useAuth();
   const events = useEvents();
   const { registeredIds, unregister } = useRegistrations();
-  const navigate = useNavigate();
 
   const myEvents = useMemo(
     () => events.filter((event) => registeredIds.includes(event.id)),
@@ -21,8 +19,6 @@ export function DashboardPage() {
     () => events.filter((event) => !registeredIds.includes(event.id)),
     [events, registeredIds],
   );
-
-  const openEvent = (eventId: string) => navigate(`/events/${eventId}`);
 
   return (
     <div className="flex flex-col gap-10">
@@ -47,7 +43,7 @@ export function DashboardPage() {
               <EventCard
                 key={event.id}
                 event={event}
-                onOpen={openEvent}
+                href={`/events/${event.id}`}
                 onDismiss={unregister}
                 badge="Going"
               />
@@ -64,7 +60,9 @@ export function DashboardPage() {
           items={upcomingEvents}
           perView={4}
           getKey={(event) => event.id}
-          renderItem={(event) => <EventCard event={event} onOpen={openEvent} />}
+          renderItem={(event) => (
+            <EventCard event={event} href={`/events/${event.id}`} />
+          )}
         />
       </section>
     </div>

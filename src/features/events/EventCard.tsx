@@ -1,27 +1,29 @@
+import { Link } from "react-router-dom";
 import type { EventItem } from "@/types";
 import { formatCurrency, formatDate } from "@/lib/format";
 
 interface EventCardProps {
   event: EventItem;
-  onOpen?: (eventId: string) => void;
+  /** When set, the whole card links to this URL. */
+  href?: string;
   onDismiss?: (eventId: string) => void;
   badge?: string;
 }
 
-export function EventCard({ event, onOpen, onDismiss, badge }: EventCardProps) {
-  const clickable = typeof onOpen === "function";
-
+export function EventCard({ event, href, onDismiss, badge }: EventCardProps) {
   return (
-    <div
-      onClick={clickable ? () => onOpen?.(event.id) : undefined}
+    <article
       className={`relative flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white ${
-        clickable ? "cursor-pointer hover:border-brand-300 hover:shadow-md" : ""
+        href
+          ? "hover:border-brand-300 hover:shadow-md focus-within:ring-2 focus-within:ring-brand-600"
+          : ""
       }`}
     >
       {onDismiss && (
         <button
           type="button"
           onClick={() => onDismiss(event.id)}
+          aria-label={`Remove ${event.name}`}
           className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-slate-900/60 text-white hover:bg-slate-900/80"
         >
           ×
@@ -36,9 +38,20 @@ export function EventCard({ event, onOpen, onDismiss, badge }: EventCardProps) {
         )}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <div className="text-base font-semibold text-slate-800">
-          {event.name}
-        </div>
+        <h3 className="text-base font-semibold text-slate-800">
+          {href ? (
+            // The ::after overlay stretches the link over the whole card, so
+            // the card stays clickable while only the title is a Tab stop.
+            <Link
+              to={href}
+              className="after:absolute after:inset-0 after:content-[''] focus:outline-none"
+            >
+              {event.name}
+            </Link>
+          ) : (
+            event.name
+          )}
+        </h3>
         <div className="text-xs text-slate-400">{event.location}</div>
         <div className="text-xs text-slate-500">
           {formatDate(event.startDateTime)}
@@ -47,6 +60,6 @@ export function EventCard({ event, onOpen, onDismiss, badge }: EventCardProps) {
           {formatCurrency(event.price)}
         </div>
       </div>
-    </div>
+    </article>
   );
 }

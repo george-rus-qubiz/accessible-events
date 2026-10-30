@@ -52,12 +52,35 @@ export function ChatbotWidget() {
     },
   ]);
   const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const widgetRef = useRef<HTMLDivElement>(null);
 
   // Pop-up appears on its own a moment after load, interrupting the user.
   useEffect(() => {
     const timer = window.setTimeout(() => setOpen(true), 10000);
     return () => window.clearTimeout(timer);
   }, []);
+
+  // Escape closes the panel from anywhere on the page, since it can open on
+  // its own. Focus returns to the toggle only if it was inside the widget.
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+      const focusWasInside = widgetRef.current?.contains(document.activeElement);
+      setOpen(false);
+      if (focusWasInside) {
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   // Keep the transcript scrolled to the newest message.
   useEffect(() => {
@@ -80,17 +103,22 @@ export function ChatbotWidget() {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-[9999]">
+    <div ref={widgetRef} className="fixed bottom-5 right-5 z-[9999]">
       {open && (
         <div className="mb-3 flex h-96 w-80 flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
           <div className="flex items-center justify-between bg-brand-500 px-4 py-3 text-white">
             <span className="text-sm font-semibold">Eva — Event Assistant</span>
-            <span
-              onClick={() => setOpen(false)}
-              className="cursor-pointer text-lg leading-none"
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                toggleRef.current?.focus();
+              }}
+              aria-label="Close chat"
+              className="text-lg leading-none"
             >
               ×
-            </span>
+            </button>
           </div>
 
           <div
@@ -113,6 +141,7 @@ export function ChatbotWidget() {
 
           <div className="flex items-center gap-2 border-t border-slate-200 px-3 py-2">
             <input
+              ref={inputRef}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
@@ -123,22 +152,36 @@ export function ChatbotWidget() {
               placeholder="Type a message…"
               className="flex-1 rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-700 placeholder:text-slate-300"
             />
-            <div
+            <button
+              type="button"
               onClick={send}
-              className="cursor-pointer select-none rounded-md bg-brand-500 px-3 py-2 text-white"
+              aria-label="Send message"
+              className="select-none rounded-md bg-brand-500 px-3 py-2 text-white"
             >
               ➤
-            </div>
+            </button>
           </div>
         </div>
       )}
 
-      <div
-        onClick={() => setOpen((v) => !v)}
-        className="ml-auto flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-brand-500 text-2xl text-white shadow-lg hover:bg-brand-600"
+      {/* Kept last in the DOM so it is the final Tab stop on every page. */}
+      <button
+        ref={toggleRef}
+        type="button"
+        onClick={() => {
+          const opening = !open;
+          setOpen(opening);
+          if (opening) {
+            // Move focus into the panel only when the user opened it.
+            requestAnimationFrame(() => inputRef.current?.focus());
+          }
+        }}
+        aria-label="Chat with Eva"
+        aria-expanded={open}
+        className="ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-500 text-2xl text-white shadow-lg hover:bg-brand-600"
       >
-        💬
-      </div>
+        <span aria-hidden="true">💬</span>
+      </button>
     </div>
   );
 }
