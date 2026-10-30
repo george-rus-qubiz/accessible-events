@@ -1,4 +1,4 @@
-import type { NewEventInput, RegisterInput } from "@/types";
+import type { Credentials, NewEventInput, RegisterInput } from "@/types";
 
 export type ValidationErrors<T> = Partial<Record<keyof T, string>>;
 
@@ -6,6 +6,23 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function isValidEmail(email: string): boolean {
   return EMAIL_PATTERN.test(email.trim());
+}
+
+export function validateLogin(
+  input: Credentials,
+): ValidationErrors<Credentials> {
+  const errors: ValidationErrors<Credentials> = {};
+
+  if (!input.email.trim()) {
+    errors.email = "Email is required.";
+  } else if (!isValidEmail(input.email)) {
+    errors.email = "Enter a valid email address.";
+  }
+  if (!input.password) {
+    errors.password = "Password is required.";
+  }
+
+  return errors;
 }
 
 export function validateRegister(

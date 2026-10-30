@@ -90,17 +90,15 @@ export function BuyTicketModal({
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <input
-            value={card}
-            onChange={(e) => setCard(e.target.value)}
-            placeholder="Card number"
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400"
-          />
-          {cardError && (
-            <span className="text-xs text-red-500">{cardError}</span>
-          )}
-        </div>
+        <TextField
+          label="Card number"
+          inputMode="numeric"
+          autoComplete="cc-number"
+          value={card}
+          onChange={(e) => setCard(e.target.value)}
+          placeholder="1234123412341234"
+          error={cardError}
+        />
         <TextField
           label="Name on card"
           value={name}
@@ -109,28 +107,23 @@ export function BuyTicketModal({
           error={nameError}
         />
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <input
-              value={expiry}
-              onChange={(e) => setExpiry(e.target.value)}
-              placeholder="MM/YY"
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400"
-            />
-            {expiryError && (
-              <span className="text-xs text-red-500">{expiryError}</span>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <input
-              value={cvc}
-              onChange={(e) => setCvc(e.target.value)}
-              placeholder="CVC"
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400"
-            />
-            {cvcError && (
-              <span className="text-xs text-red-500">{cvcError}</span>
-            )}
-          </div>
+          <TextField
+            label="Expiry date (MM/YY)"
+            autoComplete="cc-exp"
+            value={expiry}
+            onChange={(e) => setExpiry(e.target.value)}
+            placeholder="MM/YY"
+            error={expiryError}
+          />
+          <TextField
+            label="CVC"
+            inputMode="numeric"
+            autoComplete="cc-csc"
+            value={cvc}
+            onChange={(e) => setCvc(e.target.value)}
+            placeholder="123"
+            error={cvcError}
+          />
         </div>
 
         <div className="flex items-center justify-between border-t border-slate-100 pt-4">

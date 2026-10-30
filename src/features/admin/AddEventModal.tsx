@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { NewEventInput } from "@/types";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
+import { FieldError } from "@/components/ui/FieldError";
 import { TextField } from "@/components/ui/TextField";
+import { fieldErrorProps } from "@/lib/aria";
 import { readFileAsDataUrl } from "@/lib/file";
 import { validateNewEvent, type ValidationErrors } from "@/lib/validation";
 
@@ -26,6 +28,8 @@ const EMPTY_FORM: NewEventInput = {
 export function AddEventModal({ open, onClose, onCreate }: AddEventModalProps) {
   const [form, setForm] = useState<NewEventInput>(EMPTY_FORM);
   const [errors, setErrors] = useState<ValidationErrors<NewEventInput>>({});
+  const imageId = useId();
+  const imageErrorId = `${imageId}-error`;
 
   const update = <K extends keyof NewEventInput>(
     key: K,
@@ -57,7 +61,7 @@ export function AddEventModal({ open, onClose, onCreate }: AddEventModalProps) {
 
   return (
     <Modal open={open} title="Add event" onClose={onClose}>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
         <TextField
           label="Event name"
           value={form.name}
@@ -65,12 +69,19 @@ export function AddEventModal({ open, onClose, onCreate }: AddEventModalProps) {
           error={errors.name}
         />
 
-        <div className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-slate-700">Image</span>
+        <div className="flex flex-col">
+          <label
+            htmlFor={imageId}
+            className="mb-1 text-sm font-medium text-slate-700"
+          >
+            Image
+          </label>
           <input
+            id={imageId}
             type="file"
             accept="image/*"
             onChange={(e) => handleImage(e.target.files)}
+            {...fieldErrorProps(imageErrorId, errors.image)}
           />
           {form.image && (
             <img
@@ -78,38 +89,24 @@ export function AddEventModal({ open, onClose, onCreate }: AddEventModalProps) {
               className="mt-2 h-24 w-40 rounded object-cover"
             />
           )}
-          {errors.image && (
-            <span className="text-xs text-red-500">{errors.image}</span>
-          )}
+          <FieldError id={imageErrorId} message={errors.image} />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-medium text-slate-700">Starts</span>
-            <input
-              type="datetime-local"
-              value={form.startDateTime}
-              onChange={(e) => update("startDateTime", e.target.value)}
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800"
-            />
-            {errors.startDateTime && (
-              <span className="text-xs text-red-500">
-                {errors.startDateTime}
-              </span>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-medium text-slate-700">Ends</span>
-            <input
-              type="datetime-local"
-              value={form.endDateTime}
-              onChange={(e) => update("endDateTime", e.target.value)}
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800"
-            />
-            {errors.endDateTime && (
-              <span className="text-xs text-red-500">{errors.endDateTime}</span>
-            )}
-          </div>
+          <TextField
+            label="Starts"
+            type="datetime-local"
+            value={form.startDateTime}
+            onChange={(e) => update("startDateTime", e.target.value)}
+            error={errors.startDateTime}
+          />
+          <TextField
+            label="Ends"
+            type="datetime-local"
+            value={form.endDateTime}
+            onChange={(e) => update("endDateTime", e.target.value)}
+            error={errors.endDateTime}
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">

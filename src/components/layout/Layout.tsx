@@ -8,9 +8,9 @@ export function Layout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <Outlet />
-      </div>
+      </main>
       <Footer />
       <ChatbotWidget />
       <SessionTimeoutManager />

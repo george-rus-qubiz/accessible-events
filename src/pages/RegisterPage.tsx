@@ -44,36 +44,41 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
       <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="mb-6 text-center">
           <div className="text-2xl font-semibold text-brand-600">
-            Create your account
+            <h1>
+              Create your account
+            </h1>
           </div>
           <div className="text-sm text-slate-400">
-            Join Eventer in a few seconds
+            <p>
+              Join Eventer in a few seconds
+            </p>
           </div>
         </div>
 
         {formError && (
           <div className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
-            {formError}
+            <p>
+              {formError}
+            </p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <input
-              value={form.name}
-              onChange={(e) => update("name", e.target.value)}
-              placeholder="Full name"
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400"
-            />
-            {errors.name && (
-              <span className="text-xs text-red-500">{errors.name}</span>
-            )}
-          </div>
-
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex flex-col gap-4"
+        >
+          <TextField
+            label="Full name"
+            value={form.name}
+            onChange={(e) => update("name", e.target.value)}
+            placeholder="Jane Doe"
+            error={errors.name}
+          />
           <TextField
             label="Email"
             type="email"
@@ -98,27 +103,28 @@ export function RegisterPage() {
             placeholder="Repeat your password"
             error={errors.confirmPassword}
           />
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
+            <input
+              type="checkbox"
+              checked={form.isAdmin}
+              onChange={(e) => update("isAdmin", e.target.checked)}
+              className="h-4 w-4"
+            />
+            Register as an administrator
+          </label>
 
-          <div
-            className="flex cursor-pointer items-center gap-2 text-sm text-slate-600"
-            onClick={() => update("isAdmin", !form.isAdmin)}
-          >
-            <input type="checkbox" checked={form.isAdmin} readOnly />
-            <span>Register as an administrator</span>
-          </div>
-
-          <Button type="submit" className="mt-2 w-full">
+          <Button type="submit" className="mt-2 w-full focus:outline-none focus:ring-[4px] focus:ring-[#9b51e0]/50">
             Create account
           </Button>
         </form>
 
-        <div className="mt-4 text-center text-sm text-slate-500">
+        <div className="mt-4 text-center text-sm text-slate-600">
           Already have an account?{" "}
           <Link to="/login" className="text-brand-600 hover:underline">
             Log in
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

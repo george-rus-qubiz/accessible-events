@@ -4,6 +4,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { DEMO_CREDENTIALS } from "@/data/seedUsers";
+import type { Credentials } from "@/types";
+import {
+  hasErrors,
+  validateLogin,
+  type ValidationErrors,
+} from "@/lib/validation";
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -11,9 +17,16 @@ export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [errors, setErrors] = useState<ValidationErrors<Credentials>>({});
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    const validation = validateLogin({ email, password });
+    setErrors(validation);
+    if (hasErrors(validation)) {
+      setError("");
+      return;
+    }
     const result = login({ email, password });
     if (result.ok) {
       navigate("/dashboard");
@@ -23,11 +36,12 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="mb-6 text-center">
-          <div className="text-2xl font-semibold text-brand-600">Eventer</div>
-          <div className="text-sm text-slate-400">Log in to your account</div>
+          <div className="text-2xl font-semibold text-brand-600"><h1>Eventer</h1></div>
+          <div className="text-sm text-slate-400"><p>
+            Log in to your account</p></div>
         </div>
 
         {error && (
@@ -36,22 +50,30 @@ export function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex flex-col gap-4"
+        >
           <TextField
             label="Email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
+            error={errors.email}
           />
           <TextField
             label="Password"
             type="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
+            error={errors.password}
           />
-          <Button type="submit" className="mt-2 w-full">
+          <Button type="submit" className="mt-2 w-full focus:outline-none focus:ring-[4px] focus:ring-[#9b51e0]/50">
             Log in
           </Button>
         </form>
@@ -68,13 +90,13 @@ export function LoginPage() {
           </div>
         </div>
 
-        <div className="mt-4 text-center text-sm text-slate-500">
+        <div className="mt-4 text-center text-sm text-slate-600">
           No account?{" "}
           <Link to="/register" className="text-brand-600 hover:underline">
             Create one
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
