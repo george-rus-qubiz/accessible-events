@@ -4,6 +4,8 @@ import { fieldErrorProps } from "@/lib/aria";
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
+  /** Replaces the default label styling, e.g. for compact filter rows. */
+  labelClassName?: string;
   error?: string;
 }
 
@@ -12,6 +14,7 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
  */
 export function TextField({
   label,
+  labelClassName = "mb-1 text-sm font-medium text-slate-700",
   error,
   id,
   className = "",
@@ -24,10 +27,7 @@ export function TextField({
 
   return (
     <div className="flex flex-col">
-      <label
-        htmlFor={inputId}
-        className="mb-1 text-sm font-medium text-slate-700"
-      >
+      <label htmlFor={inputId} className={labelClassName}>
         {label}
       </label>
       <input
