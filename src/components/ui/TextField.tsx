@@ -32,8 +32,8 @@ export function TextField({
       </label>
       <input
         id={inputId}
-        className={`rounded-md border px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 ${
-          error ? "border-red-600" : "border-slate-300"
+        className={`rounded-md border px-3 py-2 text-sm text-slate-800 placeholder:text-slate-500 ${
+          error ? "border-red-600" : "border-slate-500"
         } ${className}`}
         {...fieldErrorProps(errorId, error, describedBy)}
         {...rest}

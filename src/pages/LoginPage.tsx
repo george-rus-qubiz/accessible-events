@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
+import { MAIN_CONTENT_ID, SkipLink } from "@/components/ui/SkipLink";
 import { DEMO_CREDENTIALS } from "@/data/seedUsers";
 import type { Credentials } from "@/types";
 import {
@@ -36,16 +37,22 @@ export function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+    <>
+    <SkipLink />
+    <main
+      id={MAIN_CONTENT_ID}
+      tabIndex={-1}
+      className="flex min-h-screen items-center justify-center bg-slate-50 px-4 focus:outline-none"
+    >
       <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="mb-6 text-center">
           <div className="text-2xl font-semibold text-brand-600"><h1>Eventer</h1></div>
-          <div className="text-sm text-slate-400"><p>
+          <div className="text-sm text-slate-600"><p>
             Log in to your account</p></div>
         </div>
 
         {error && (
-          <div className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+          <div className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
             {error}
           </div>
         )}
@@ -73,7 +80,10 @@ export function LoginPage() {
             placeholder="••••••••"
             error={errors.password}
           />
-          <Button type="submit" className="mt-2 w-full focus:outline-none focus:ring-[4px] focus:ring-[#9b51e0]/50">
+          <Button
+            type="submit"
+            className="mt-2 w-full !bg-brand-600 hover:!bg-brand-700 focus:outline-none focus:ring-[4px] focus:ring-[#9b51e0] focus:ring-offset-2"
+          >
             Log in
           </Button>
         </form>
@@ -92,11 +102,15 @@ export function LoginPage() {
 
         <div className="mt-4 text-center text-sm text-slate-600">
           No account?{" "}
-          <Link to="/register" className="text-brand-600 hover:underline">
+          <Link
+            to="/register"
+            className="text-brand-600 underline underline-offset-2 hover:text-brand-700"
+          >
             Create one
           </Link>
         </div>
       </div>
     </main>
+    </>
   );
 }
